@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    ============================================================
+    PLIK LAYOUTU: activity_main.xml
+    ============================================================
+    Linia powyżej (<?xml ... ?>) to deklaracja XML: mówi, że plik to XML w wersji 1.0
+    zapisany w kodowaniu UTF-8 (dzięki temu polskie znaki, np. "ś", "ć", "ż", wyświetlą się poprawnie).
+
+    UWAGA: w XML komentarza nie wolno wstawiać wewnątrz znacznika (między atrybutami),
+    dlatego wszystkie objaśnienia atrybutów są w komentarzach PRZED danym elementem.
+-->
+
+<!--
+    ELEMENT GŁÓWNY: FrameLayout
+    FrameLayout to najprostszy kontener: elementy w środku układają się "jeden na drugim"
+    i domyślnie lądują w lewym górnym rogu. Pozycję dziecka zmieniamy przez layout_gravity.
+    Używamy go jako pełnoekranowego tła, na którym leży nasz panel.
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        Deklaracja przestrzeni nazw. Dzięki niej możemy pisać atrybuty z prefiksem "android:".
+        Adres to tylko identyfikator, nie jest pobierany z internetu. Wymagane w głównym elemencie.
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+        Szerokość i wysokość: wypełnij cały rodzic (czyli cały ekran).
+        Inne popularne wartości: wrap_content (tyle, ile potrzebuje zawartość) lub stały rozmiar, np. 120dp.
+
+    android:background="#FF9800"
+        Kolor tła w formacie #RRGGBB (bez alfy, więc w pełni kryjący). To pomarańczowy.
+        Celowo jaskrawy: gdy panel stanie się przezroczysty, ten kolor będzie przez niego prześwitywał,
+        więc od razu widać efekt działania alfy.
+-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF9800">
+
+    <!--
+        PANEL: LinearLayout (nasz półprzezroczysty panel)
+        LinearLayout układa dzieci w jednej linii: pionowo albo poziomo.
+        To jego tło będziemy zmieniać w Javie przez panel.setBackgroundColor(...).
+
+        android:id="@+id/panel"
+            Nadaje identyfikator. Znak "+" oznacza "utwórz nowe ID w klasie R".
+            W Javie odnajdujemy element przez findViewById(R.id.panel).
+
+        android:layout_width="match_parent"
+            Panel zajmuje całą szerokość rodzica (minus marginesy).
+
+        android:layout_height="wrap_content"
+            Wysokość dopasowana do zawartości: panel jest tak wysoki, jak jego elementy.
+
+        android:layout_gravity="center"
+            Ustawia panel na środku rodzica (FrameLayout). Uwaga na różnicę:
+            layout_gravity dotyczy położenia TEGO elementu w rodzicu,
+            a samo gravity dotyczyłoby ułożenia ZAWARTOŚCI elementu.
+
+        android:layout_margin="16dp"
+            Zewnętrzny odstęp od krawędzi rodzica (z każdej strony 16dp).
+            dp to jednostka niezależna od zagęszczenia pikseli, więc wygląda tak samo na różnych ekranach.
+
+        android:orientation="vertical"
+            Dzieci układają się jedno pod drugim. Wartość "horizontal" ustawiłaby je obok siebie.
+
+        android:padding="16dp"
+            Wewnętrzny odstęp między krawędzią panelu a jego zawartością.
+            Różnica: margin to odstęp NA ZEWNĄTRZ, padding to odstęp WEWNĄTRZ.
+
+        android:background="#CC121212"
+            Kolor tła w formacie #AARRGGBB (cztery bajty):
+              CC = alfa (204 z 255, czyli około 80% krycia)
+              12 = czerwony, 12 = zielony, 12 = niebieski (bardzo ciemny szary)
+            Tło jest więc półprzezroczyste i pomarańcz z FrameLayoutu lekko prześwituje.
+            To jest nasz "kolor bazowy" (BASE_COLOR w Javie), od którego liczymy procenty.
+    -->
+    <LinearLayout
+        android:id="@+id/panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="#CC121212">
+
+        <!--
+            NAPIS Z AKTUALNĄ WARTOŚCIĄ: TextView
+            TextView wyświetla tekst. Ten napis aktualizujemy w Javie w metodzie applyAlpha()
+            przez tvInfo.setText(...).
+
+            android:id="@+id/tvInfo"
+                Identyfikator, żeby znaleźć napis w kodzie (R.id.tvInfo).
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+                Rozmiar dopasowany do tekstu.
+
+            android:text="Przezroczystość panelu: 100%"
+                Tekst początkowy. W prawdziwej aplikacji lepiej trzymać teksty w strings.xml
+                (@string/...), tu zostawiamy wprost dla czytelności lekcji.
+
+            android:textColor="#FFFFFF"
+                Biały kolor tekstu. Musi być jasny, bo panel jest ciemny.
+
+            android:textSize="18sp"
+                Rozmiar czcionki w sp (jednostka skalowana wg ustawień czcionki użytkownika,
+                dlatego dla tekstu używamy sp, a nie dp).
+        -->
+        <TextView
+            android:id="@+id/tvInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Przezroczystość panelu: 100%"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <!--
+            ============================================================
+            SPOSÓB 1: RadioButton (wartości gotowe)
+            ============================================================
+            Nagłówek sekcji. Zwykły TextView bez ID, bo nie zmieniamy go z kodu.
+
+            android:layout_marginTop="16dp"
+                Odstęp tylko od góry (16dp), żeby oddzielić sekcję od poprzedniej.
+                Są też marginLeft/Start, marginBottom, marginEnd.
+
+            android:textStyle="bold"
+                Pogrubienie. Inne wartości: normal, italic (można łączyć: bold|italic).
+        -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="1) RadioButton"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!--
+            RadioGroup: kontener na przyciski radiowe
+            Grupuje RadioButtony tak, że naraz może być zaznaczony tylko jeden.
+            Bez RadioGroup każdy przycisk działałby osobno i dałoby się zaznaczyć wszystkie.
+            RadioGroup dziedziczy po LinearLayout, więc ma też atrybut orientation.
+
+            android:id="@+id/radioGroup"
+                W Javie podpinamy do niego setOnCheckedChangeListener(...) i wywołujemy
+                radioGroup.check(...) lub radioGroup.clearCheck().
+
+            android:orientation="horizontal"
+                Przyciski obok siebie w jednym rzędzie (domyślnie byłyby pionowo).
+        -->
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!--
+                RadioButton 100%
+                android:id="@+id/rb100"
+                    ID rozpoznawane w listenerze: if (checkedId == R.id.rb100) ...
+
+                android:checked="true"
+                    Ten przycisk jest zaznaczony na starcie. Pasuje do początkowej alfy panelu (100%).
+                    Zaznaczony może być tylko jeden w grupie.
+
+                android:text="100%"
+                    Podpis przy przycisku.
+
+                android:textColor="#FFFFFF"
+                    Biały podpis, żeby był widoczny na ciemnym panelu.
+            -->
+            <RadioButton
+                android:id="@+id/rb100"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="100%"
+                android:textColor="#FFFFFF" />
+
+            <!--
+                RadioButton 75%
+                Bez android:checked, więc domyślnie niezaznaczony.
+                Reszta atrybutów jak wyżej. W Javie odpowiada wartości 75.
+            -->
+            <RadioButton
+                android:id="@+id/rb75"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="75%"
+                android:textColor="#FFFFFF" />
+
+            <!-- RadioButton 50%: w Javie odpowiada wartości 50. -->
+            <RadioButton
+                android:id="@+id/rb50"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50%"
+                android:textColor="#FFFFFF" />
+
+            <!-- RadioButton 25%: w Javie odpowiada wartości 25. -->
+            <RadioButton
+                android:id="@+id/rb25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="25%"
+                android:textColor="#FFFFFF" />
+        </RadioGroup>
+
+        <!--
+            ============================================================
+            SPOSÓB 2: pole do wpisania
+            ============================================================
+            Nagłówek sekcji (zwykły TextView, atrybuty jak w poprzednim nagłówku).
+        -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="2) Pole tekstowe (0-100)"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!--
+            EditText: pole do wpisywania tekstu
+            android:id="@+id/etAlpha"
+                Dostęp z Javy: findViewById(R.id.etAlpha). Podpinamy do niego TextWatcher,
+                który reaguje na każdą zmianę wpisanego tekstu.
+
+            android:layout_width="120dp"
+                Stała szerokość, bo wpisujemy tylko krótką liczbę.
+                match_parent rozciągnąłby pole na cały panel.
+
+            android:hint="0-100"
+                Szary podpowiadający tekst widoczny tylko wtedy, gdy pole jest puste.
+                Nie jest to wartość pola: getText() zwróci wtedy pusty napis.
+
+            android:inputType="number"
+                Wyświetla klawiaturę numeryczną i pozwala wpisać tylko cyfry.
+                Bez tego użytkownik mógłby wpisać litery, a Integer.parseInt rzuciłby wyjątek.
+                (Liczby ujemne i ułamki są zablokowane, bo nie dodajemy "signed" ani "decimal".)
+
+            android:maxLength="3"
+                Maksymalnie 3 znaki (najdłuższa sensowna wartość to "100").
+                Kod w Javie i tak dodatkowo ogranicza zakres do 0-100.
+
+            android:text="100"
+                Wartość startowa: pełne krycie, zgodnie z radiobuttonem i suwakiem.
+
+            android:textColor="#FFFFFF"
+                Biały wpisywany tekst.
+
+            android:textColorHint="#AAAAAA"
+                Jasnoszary kolor podpowiedzi (hint), żeby różnił się od właściwego tekstu.
+        -->
+        <EditText
+            android:id="@+id/etAlpha"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:hint="0-100"
+            android:inputType="number"
+            android:maxLength="3"
+            android:text="100"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#AAAAAA" />
+
+        <!--
+            ============================================================
+            SPOSÓB 3: suwak
+            ============================================================
+            Nagłówek sekcji.
+        -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="3) Suwak"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <!--
+            android:id="@+id/seekAlpha"
+                Dostęp z Javy; podpinamy OnSeekBarChangeListener i wołamy setProgress(...).
+
+            android:layout_width="match_parent"
+                Suwak na całą szerokość panelu, żeby łatwo było go przeciągać.
+
+            android:layout_height="wrap_content"
+                Wysokość standardowa dla suwaka.
+
+            android:max="100"
+                Maksymalna wartość suwaka. Zakres to 0-100 (minimum domyślnie wynosi 0),
+                więc położenie suwaka odpowiada wprost procentom krycia.
+
+            android:progress="100"
+                Pozycja startowa: koniec suwaka, czyli pełne krycie (spójne z polem tekstowym
+                i radiobuttonem 100%).
+        -->
+        <SeekBar
+            android:id="@+id/seekAlpha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="100" />
+    </LinearLayout>
+</FrameLayout>
